@@ -7,7 +7,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:5173', 'https://sainzlab.my.id', '192.168.8.0'],
+    'allowed_origins' => ['https://sainzlab.my.id', 'http://localhost:5173', 'http://10.10.0.8:8088'],
 
     'allowed_origins_patterns' => [],
 
