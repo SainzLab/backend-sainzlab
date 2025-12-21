@@ -63,6 +63,7 @@ class ServiceResource extends Resource
                     ->disk('s3')
                     ->visibility('public')
                     ->directory('services')
+                    ->fetchFileInformation(false)
                     ->columnSpanFull(),
                 Toggle::make('is_active')
                     ->default(true),

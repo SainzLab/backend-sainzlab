@@ -53,6 +53,7 @@ class PortfolioResource extends Resource
                     ->disk('s3')
                     ->visibility('public')
                     ->directory('portfolios') // Ini akan membuat folder: sainzlab-storage/portfolios/
+                    ->fetchFileInformation(false)
                     ->required()
                     ->columnSpanFull(),
 
