@@ -7,6 +7,7 @@ use App\Models\Service;
 use App\Models\Portfolio;
 use App\Models\Faq;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class HomeController extends Controller
 {
@@ -21,7 +22,7 @@ class HomeController extends Controller
                 'desc' => $item->description,
                 'price' => $item->price_label,
                 // Pastikan setup storage:link sudah dijalankan
-                'image' => $item->image ? asset('storage/' . $item->image) : null,
+                'image' => $item->image ? Storage::url($item->image) : null,
             ];
         });
 
@@ -31,7 +32,7 @@ class HomeController extends Controller
                 'id' => $item->id,
                 'title' => $item->title,
                 'category' => $item->category,
-                'image' => asset('storage/' . $item->image),
+                'image' => $item->image ? Storage::url($item->image) : null,
                 'link' => $item->link
             ];
         });
