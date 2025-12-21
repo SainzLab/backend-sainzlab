@@ -3,24 +3,18 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\PortfolioResource\Pages;
-use App\Filament\Resources\PortfolioResource\RelationManagers;
 use App\Models\Portfolio;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Set;
 use Illuminate\Support\Str;
-
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\ToggleColumn;
@@ -39,7 +33,9 @@ class PortfolioResource extends Resource
                     ->required()
                     ->live(onBlur: true)
                     ->afterStateUpdated(fn (Set $set, ?string $state) => $set('slug', Str::slug($state))),
+
                 TextInput::make('slug')->required()->readOnly(),
+
                 Select::make('category')
                     ->options([
                         'Web Development' => 'Web Development',
@@ -48,12 +44,18 @@ class PortfolioResource extends Resource
                         'IoT' => 'IoT',
                     ])
                     ->required(),
+
                 TextInput::make('link')->url()->label('Link Project'),
+
                 FileUpload::make('image')
                     ->image()
-                    ->directory('portfolios')
+                    // TAMBAHAN PENTING: Paksa simpan ke S3 (MinIO) & set public
+                    ->disk('s3')
+                    ->visibility('public')
+                    ->directory('portfolios') // Ini akan membuat folder: sainzlab-storage/portfolios/
                     ->required()
                     ->columnSpanFull(),
+
                 Toggle::make('is_active')->default(true),
             ]);
     }
@@ -62,18 +64,24 @@ class PortfolioResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    // TAMBAHAN PENTING: Biar preview gambarnya ambil dari S3 (CDN)
+                    ->disk('s3')
+                    ->visibility('public'),
+
                 TextColumn::make('title')->searchable(),
-                TextColumn::make('category')->badge()->color('primary'),
+
+                TextColumn::make('category')
+                    ->badge()
+                    ->color('primary'),
+
                 ToggleColumn::make('is_active'),
             ]);
     }
 
     public static function getRelations(): array
     {
-        return [
-            //
-        ];
+        return [];
     }
 
     public static function getPages(): array
