@@ -60,6 +60,8 @@ class ServiceResource extends Resource
                     ->columnSpanFull(),
                 FileUpload::make('image')
                     ->image()
+                    ->disk('s3')
+                    ->visibility('public')
                     ->directory('services')
                     ->columnSpanFull(),
                 Toggle::make('is_active')
@@ -71,7 +73,9 @@ class ServiceResource extends Resource
     {
         return $table
             ->columns([
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    ->disk('s3')
+                    ->visibility('public'),
                 TextColumn::make('title')->searchable()->sortable(),
                 TextColumn::make('category')->sortable(),
                 TextColumn::make('price_label'),
