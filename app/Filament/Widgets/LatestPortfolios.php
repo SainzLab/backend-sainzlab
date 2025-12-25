@@ -23,8 +23,9 @@ use Filament\Widgets\TableWidget as BaseWidget;
                 )
                 ->columns([
                     Tables\Columns\ImageColumn::make('image')
-                        ->label('Image'),
-
+                        ->label('Image')
+			->disk('s3')
+			->visibility('public'),
                     Tables\Columns\TextColumn::make('title')
                         ->label('Judul Proyek')
                         ->searchable()
